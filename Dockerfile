@@ -12,4 +12,4 @@ COPY ./webserver.py /root/bin/
 COPY ./versions.sh /root/bin/
 
 WORKDIR /root/
-CMD ["/usr/bin/tmux"]
+CMD ["/bin/bash"]
