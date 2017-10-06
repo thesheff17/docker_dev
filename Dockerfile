@@ -1,4 +1,4 @@
-FROM thehseff17/docker_powershell
+FROM thesheff17/docker_powershell
 
 MAINTAINER Dan Sheffner <Dan@Sheffner.com>
 
