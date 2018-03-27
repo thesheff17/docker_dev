@@ -3,7 +3,7 @@ FROM ubuntu:16.04
 # MAINTAINER Dan Sheffner
 # This is a random dev docker container maintained by a crazy person.
 # Use it if you want.  Don't complain about it if you have issues
-# or it groes to be to big of an image. This is a development container.  Its going to be big
+# or it grows to be to big of an image. This is a development container.  Its going to be big.
 # make pull requests if you want changes
 # time docker build . -t thesheff17/docker_dev:`date +"%m%d%Y"`
 
