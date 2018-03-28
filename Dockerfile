@@ -37,13 +37,6 @@ FROM ubuntu:rolling
 # pulling the image
 # time docker pull  thesheff17/docker_dev:latest
 
-# helper ENV variables
-RUN locale-gen en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV EDITOR vim
-ENV SHELL bash
-
 # build date
 RUN echo `date` > /root/build_date.txt
 
@@ -75,6 +68,7 @@ RUN \
     libssl-dev \
     libxml2-dev \
     libxslt1-dev \
+    locales \
     lsb-release \
     mysql-client \
     net-tools \
@@ -95,6 +89,13 @@ RUN \
 
 # cleanup proxy
 # RUN rm /etc/apt/apt.conf.d/01proxy
+
+# helper ENV variables
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV EDITOR vim
+ENV SHELL bash
 
 # Android install
 ENV ANDROID_STUDIO /opt/android-studio
