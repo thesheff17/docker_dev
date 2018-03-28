@@ -95,12 +95,12 @@ ENV ANDROID_STUDIO /opt/android-studio
 ENV ANDROID_STUDIO_VERSION 3.2.0.7
 
 # below will get it from the web.  Recommended for remote jenkins builds.  Not recommended for local testing
-# ENV ANDROID_STUDIO_URL https://dl.google.com/dl/android/studio/ide-zips/${ANDROID_STUDIO_VERSION}/android-studio-ide-173.4670218-linux.zip
-# ADD $ANDROID_STUDIO_URL /tmp/tmp.zip
+ENV ANDROID_STUDIO_URL https://dl.google.com/dl/android/studio/ide-zips/${ANDROID_STUDIO_VERSION}/android-studio-ide-173.4670218-linux.zip
+ADD $ANDROID_STUDIO_URL /tmp/tmp.zip
 
 # setup for local comment out above
 # wget https://dl.google.com/dl/android/studio/ide-zips/3.2.0.7/android-studio-ide-173.4670218-linux.zip
-COPY ./android-studio-ide-173.4670218-linux.zip /tmp/tmp.zip
+# COPY ./android-studio-ide-173.4670218-linux.zip /tmp/tmp.zip
 
 RUN unzip /tmp/tmp.zip -d /opt && rm /tmp/tmp.zip
 
