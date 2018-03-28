@@ -37,6 +37,16 @@ FROM ubuntu:rolling
 # pulling the image
 # time docker pull  thesheff17/docker_dev:latest
 
+# helper ENV variables
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV EDITOR vim
+ENV SHELL bash
+
+# build date
+RUN echo `date` > /root/build_date.txt
+
 # I use a local mirror to test
 # RUN echo 'Acquire::http::Proxy "http://192.168.1.10:3142";' > /etc/apt/apt.conf.d/01proxy
 
@@ -52,7 +62,6 @@ RUN \
     build-essential \
     curl \
     git-core \
-    golang \
     inetutils-ping \
     lib32ncurses5 \
     lib32ncurses5 \
@@ -291,6 +300,18 @@ RUN \
     werkzeug \
     whitenoise \
     wtforms"
+
+# go
+ENV GO_VERSION go1.10.linux-amd64.tar.gz
+RUN wget --quiet https://storage.googleapis.com/golang/${GO_VERSION}
+RUN tar -C /usr/local -xzf ${GO_VERSION}
+RUN echo 'export PATH=$PATH:/usr/local/go/bin' >> /root/.bashrc
+RUN echo 'export GOBIN=/root/go/bin' >> /root/.bashrc
+RUN echo 'export GOPATH=/root/go/bin' >> /root/.bashrc
+RUN echo 'export PATH=$PATH:/usr/local/go/bin' >> /home/ubuntu/.bashrc
+RUN echo 'export GOBIN=/home/ubuntu/go/bin' >> /home/ubuntu/.bashrc
+RUN echo 'export GOPATH=/home/ubuntu/go/bin' >> /home/ubuntu/.bashrc
+RUN ${GO_VERSION}
 
 # vim for root
 RUN \
