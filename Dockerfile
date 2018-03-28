@@ -24,8 +24,8 @@
 # I'm torn between using 16.04 and ubuntu rolling
 # some of these packages are old
 # I'm going to flip these as needed for building
-# FROM ubuntu:16.04
-FROM ubuntu:rolling
+FROM ubuntu:16.04
+# FROM ubuntu:rolling
 
 # MAINTAINER Dan Sheffner
 # This is a random dev docker container maintained by a crazy person.
