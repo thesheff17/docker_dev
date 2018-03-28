@@ -312,7 +312,7 @@ RUN echo 'export GOPATH=/root/go/bin' >> /root/.bashrc
 RUN echo 'export PATH=$PATH:/usr/local/go/bin' >> /home/ubuntu/.bashrc
 RUN echo 'export GOBIN=/home/ubuntu/go/bin' >> /home/ubuntu/.bashrc
 RUN echo 'export GOPATH=/home/ubuntu/go/bin' >> /home/ubuntu/.bashrc
-RUN ${GO_VERSION}
+RUN rm ${GO_VERSION}
 
 # vim for root
 RUN \
