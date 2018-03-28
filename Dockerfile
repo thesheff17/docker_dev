@@ -24,8 +24,8 @@
 # I'm torn between using 16.04 and ubuntu rolling
 # some of these packages are old
 # I'm going to flip these as needed for building
-FROM ubuntu:16.04
-# FROM ubuntu:rolling
+# FROM ubuntu:16.04
+FROM ubuntu:rolling
 
 # MAINTAINER Dan Sheffner
 # This is a random dev docker container maintained by a crazy person.
@@ -47,6 +47,7 @@ RUN \
     apt-get update && \
     apt-get -y upgrade && \
     apt-get install -y \
+    apt-utils \
     apache2 \
     apt-utils \
     build-essential \
@@ -76,9 +77,9 @@ RUN \
     python-pip \
     python3-pip \
     screen \
+    software-properties-common \
     tmux \
     unzip \
-    vim \
     wget && \
     apt-get autoremove && \
     apt-get clean && \
@@ -98,6 +99,7 @@ ENV ANDROID_STUDIO_URL https://dl.google.com/dl/android/studio/ide-zips/${ANDROI
 ADD $ANDROID_STUDIO_URL /tmp/tmp.zip
 
 # setup for local comment out above
+# wget https://dl.google.com/dl/android/studio/ide-zips/3.2.0.7/android-studio-ide-173.4670218-linux.zip
 # COPY ./android-studio-ide-173.4670218-linux.zip /tmp/tmp.zip
 
 RUN unzip /tmp/tmp.zip -d /opt && rm /tmp/tmp.zip
@@ -373,6 +375,16 @@ RUN export PATH=$PATH:/usr/local/go/bin && \
     go get github.com/fatih/motion && \
     go get github.com/zmb3/gogetdoc && \
     go get github.com/josharian/impl
+
+# going to try to fix vim
+RUN \
+    add-apt-repository ppa:jonathonf/vim && \
+    apt-get -y update && \
+    apt-get install -y vim-nox-py2 && \
+    apt-get autoremove && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+    vim --version
 
 # Copy over samples
 COPY ./webserver.go /root/bin/
