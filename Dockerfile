@@ -40,7 +40,6 @@ FROM ubuntu:rolling
 # I use a local mirror to test
 # RUN echo 'Acquire::http::Proxy "http://192.168.1.10:3142";' > /etc/apt/apt.conf.d/01proxy
 
-
 # 1 package per line/alphabetical order
 RUN \
     dpkg --add-architecture i386 && \
@@ -102,7 +101,9 @@ ADD $ANDROID_STUDIO_URL /tmp/tmp.zip
 # wget https://dl.google.com/dl/android/studio/ide-zips/3.2.0.7/android-studio-ide-173.4670218-linux.zip
 # COPY ./android-studio-ide-173.4670218-linux.zip /tmp/tmp.zip
 
-RUN unzip /tmp/tmp.zip -d /opt && rm /tmp/tmp.zip
+RUN \
+    unzip /tmp/tmp.zip -d /opt && \
+    rm /tmp/tmp.zip
 
 ENV USER ubuntu
 ENV UID 1000
@@ -142,7 +143,8 @@ RUN ionic -v
 RUN pip3 install --upgrade pip && pip2 install --upgrade pip
 
 # virtualenv
-RUN pip2 install virtualenvwrapper virtualenv && \
+RUN \
+    pip2 install virtualenvwrapper virtualenv && \
     cd /root/ && \
     /bin/bash -c "source /usr/local/bin/virtualenvwrapper.sh && \
     mkvirtualenv --python=/usr/bin/python3 venv3 && \
@@ -341,7 +343,8 @@ RUN \
     mv /home/ubuntu/vimrc2  /root/.vimrc
 
 # go packages
-RUN export PATH=$PATH:/usr/local/go/bin && \
+RUN \
+    export PATH=$PATH:/usr/local/go/bin && \
     export GOPATH=/root/go/bin && \
     export GOBIN=/root/go/bin && \
     go get github.com/nsf/gocode && \
@@ -359,7 +362,8 @@ RUN export PATH=$PATH:/usr/local/go/bin && \
     go get github.com/josharian/impl
 
 # go packages
-RUN export PATH=$PATH:/usr/local/go/bin && \
+RUN \
+    export PATH=$PATH:/usr/local/go/bin && \
     export GOPATH=/home/ubuntu/go/bin && \
     export GOBIN=/home/ubuntu/go/bin && \
     go get github.com/nsf/gocode && \
