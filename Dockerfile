@@ -38,7 +38,7 @@ FROM ubuntu:rolling
 # time docker pull  thesheff17/docker_dev:latest
 
 # I use a local mirror to test
-RUN echo 'Acquire::http::Proxy "http://192.168.1.10:3142";' > /etc/apt/apt.conf.d/01proxy
+# RUN echo 'Acquire::http::Proxy "http://192.168.1.10:3142";' > /etc/apt/apt.conf.d/01proxy
 
 
 # 1 package per line/alphabetical order
@@ -47,6 +47,7 @@ RUN \
     apt-get update && \
     apt-get -y upgrade && \
     apt-get install -y \
+    apt-utils \
     apache2 \
     apt-utils \
     build-essential \
@@ -76,16 +77,16 @@ RUN \
     python-pip \
     python3-pip \
     screen \
+    software-properties-common \
     tmux \
     unzip \
-    vim \
     wget && \
     apt-get autoremove && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # cleanup proxy
-RUN rm /etc/apt/apt.conf.d/01proxy
+# RUN rm /etc/apt/apt.conf.d/01proxy
 
 # Android install
 ENV ANDROID_STUDIO /opt/android-studio
@@ -374,6 +375,16 @@ RUN export PATH=$PATH:/usr/local/go/bin && \
     go get github.com/fatih/motion && \
     go get github.com/zmb3/gogetdoc && \
     go get github.com/josharian/impl
+
+# going to try to fix vim
+RUN \
+    add-apt-repository ppa:jonathonf/vim && \
+    apt-get -y update && \
+    apt-get install -y vim-nox-py2 && \
+    apt-get autoremove && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+    vim --version
 
 # Copy over samples
 COPY ./webserver.go /root/bin/
