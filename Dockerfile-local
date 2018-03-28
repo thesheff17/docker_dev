@@ -32,16 +32,13 @@ FROM ubuntu:rolling
 # Use it if you want.  Don't complain about it if you have issues
 # or it grows to be to big of an image. This is a development container.  Its going to be big.
 # make pull requests if you want changes
-# time docker build . -t thesheff17/docker_dev:`date +"%m%d%Y"`
-
-# pulling the image
-# time docker pull  thesheff17/docker_dev:latest
+# time docker build -f  Dockerfile-local . -t thesheff17/docker_dev-local:`date +"%m%d%Y"`
 
 # build date
 RUN echo `date` > /root/build_date.txt
 
 # I use a local mirror to test
-# RUN echo 'Acquire::http::Proxy "http://172.17.0.1:3142";' > /etc/apt/apt.conf.d/01proxy
+RUN echo 'Acquire::http::Proxy "http://172.17.0.1:3142";' > /etc/apt/apt.conf.d/01proxy
 
 # 1 package per line/alphabetical order
 RUN \
@@ -89,7 +86,7 @@ RUN \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # cleanup proxy
-# RUN rm /etc/apt/apt.conf.d/01proxy
+RUN rm /etc/apt/apt.conf.d/01proxy
 
 # helper ENV variables
 RUN locale-gen en_US.UTF-8
@@ -105,12 +102,12 @@ ENV ANDROID_STUDIO /opt/android-studio
 ENV ANDROID_STUDIO_VERSION 3.2.0.7
 
 # below will get it from the web.  Recommended for remote jenkins builds.  Not recommended for local testing
-ENV ANDROID_STUDIO_URL https://dl.google.com/dl/android/studio/ide-zips/${ANDROID_STUDIO_VERSION}/android-studio-ide-173.4670218-linux.zip
-ADD $ANDROID_STUDIO_URL /tmp/tmp.zip
+# ENV ANDROID_STUDIO_URL https://dl.google.com/dl/android/studio/ide-zips/${ANDROID_STUDIO_VERSION}/android-studio-ide-173.4670218-linux.zip
+# ADD $ANDROID_STUDIO_URL /tmp/tmp.zip
 
 # setup for local comment out above
 # wget https://dl.google.com/dl/android/studio/ide-zips/3.2.0.7/android-studio-ide-173.4670218-linux.zip
-# COPY ./android-studio-ide-173.4670218-linux.zip /tmp/tmp.zip
+COPY ./android-studio-ide-173.4670218-linux.zip /tmp/tmp.zip
 
 RUN \
     unzip /tmp/tmp.zip -d /opt && \
