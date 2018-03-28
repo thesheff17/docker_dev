@@ -41,7 +41,7 @@ FROM ubuntu:rolling
 RUN echo `date` > /root/build_date.txt
 
 # I use a local mirror to test
-# RUN echo 'Acquire::http::Proxy "http://192.168.1.10:3142";' > /etc/apt/apt.conf.d/01proxy
+RUN echo 'Acquire::http::Proxy "http://172.17.0.1:3142";' > /etc/apt/apt.conf.d/01proxy
 
 # 1 package per line/alphabetical order
 RUN \
@@ -80,6 +80,7 @@ RUN \
     python3-pip \
     screen \
     software-properties-common \
+    sudo \
     tmux \
     unzip \
     wget && \
@@ -88,7 +89,7 @@ RUN \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # cleanup proxy
-# RUN rm /etc/apt/apt.conf.d/01proxy
+RUN rm /etc/apt/apt.conf.d/01proxy
 
 # helper ENV variables
 RUN locale-gen en_US.UTF-8
@@ -314,6 +315,14 @@ RUN \
     echo 'export GOBIN=/home/ubuntu/go/bin' >> /home/ubuntu/.bashrc && \
     echo 'export GOPATH=/home/ubuntu/go/bin' >> /home/ubuntu/.bashrc && \
     rm ${GO_VERSION}
+
+# ruby install
+RUN \
+    gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 && \
+    curl -sSL https://get.rvm.io | bash -s stable --ruby && \
+    curl -sSL https://get.rvm.io | bash -s stable --rails && \
+    echo "source /usr/local/rvm/scripts/rvm" >> /root/.bashrc && \
+    echo "source /usr/local/rvm/scripts/rvm" >> /home/ubuntu/.bashrc
 
 # vim for root
 RUN \
