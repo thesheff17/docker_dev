@@ -304,15 +304,16 @@ RUN \
 
 # go
 ENV GO_VERSION go1.10.linux-amd64.tar.gz
-RUN wget --quiet https://storage.googleapis.com/golang/${GO_VERSION}
-RUN tar -C /usr/local -xzf ${GO_VERSION}
-RUN echo 'export PATH=$PATH:/usr/local/go/bin' >> /root/.bashrc
-RUN echo 'export GOBIN=/root/go/bin' >> /root/.bashrc
-RUN echo 'export GOPATH=/root/go/bin' >> /root/.bashrc
-RUN echo 'export PATH=$PATH:/usr/local/go/bin' >> /home/ubuntu/.bashrc
-RUN echo 'export GOBIN=/home/ubuntu/go/bin' >> /home/ubuntu/.bashrc
-RUN echo 'export GOPATH=/home/ubuntu/go/bin' >> /home/ubuntu/.bashrc
-RUN rm ${GO_VERSION}
+RUN \
+    wget --quiet https://storage.googleapis.com/golang/${GO_VERSION} && \
+    tar -C /usr/local -xzf ${GO_VERSION} && \
+    echo 'export PATH=$PATH:/usr/local/go/bin' >> /root/.bashrc && \
+    echo 'export GOBIN=/root/go/bin' >> /root/.bashrc && \
+    echo 'export GOPATH=/root/go/bin' >> /root/.bashrc && \
+    echo 'export PATH=$PATH:/usr/local/go/bin' >> /home/ubuntu/.bashrc && \
+    echo 'export GOBIN=/home/ubuntu/go/bin' >> /home/ubuntu/.bashrc && \
+    echo 'export GOPATH=/home/ubuntu/go/bin' >> /home/ubuntu/.bashrc && \
+    rm ${GO_VERSION}
 
 # vim for root
 RUN \
