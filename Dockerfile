@@ -24,8 +24,8 @@
 # I'm torn between using 16.04 and ubuntu rolling
 # some of these packages are old
 # I'm going to flip these as needed for building
-# FROM ubuntu:16.04
-FROM ubuntu:rolling
+FROM ubuntu:16.04
+# FROM ubuntu:rolling
 
 # MAINTAINER Dan Sheffner
 # This is a random dev docker container maintained by a crazy person.
@@ -338,7 +338,6 @@ RUN \
     wget https://raw.githubusercontent.com/thesheff17/youtube/master/vim/vimrc2 && \
     mv /home/ubuntu/vimrc2  /root/.vimrc
 
-
 # go packages
 RUN export PATH=$PATH:/usr/local/go/bin && \
     export GOPATH=/root/go/bin && \
@@ -374,7 +373,6 @@ RUN export PATH=$PATH:/usr/local/go/bin && \
     go get github.com/fatih/motion && \
     go get github.com/zmb3/gogetdoc && \
     go get github.com/josharian/impl
-
 
 # Copy over samples
 COPY ./webserver.go /root/bin/
