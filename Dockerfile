@@ -32,7 +32,8 @@ FROM ubuntu:rolling
 # Use it if you want.  Don't complain about it if you have issues
 # or it grows to be to big of an image. This is a development container.  Its going to be big.
 # make pull requests if you want changes
-# time docker build -f  Dockerfile-local . -t thesheff17/docker_dev-local:`date +"%m%d%Y"`
+# time docker build . -t thesheff17/docker_dev:`date +"%m%d%Y"`
+# time docker build . -t thesheff17/docker_dev:latest
 
 # build date
 RUN echo `date` > /root/build_date.txt
