@@ -318,9 +318,11 @@ RUN \
     gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 && \
     curl -sSL https://get.rvm.io | bash -s stable --ruby && \
     curl -sSL https://get.rvm.io | bash -s stable --rails && \
-    cp -r /root/.rvm /usr/local/rvm && \
-    echo "source /usr/local/rvm/scripts/rvm" >> /root/.bashrc && \
-    echo "source /usr/local/rvm/scripts/rvm" >> /home/ubuntu/.bashrc
+    cp -r /root/.rvm /opt/rvm && \
+    echo "source /opt/rvm/scripts/rvm" >> /root/.bashrc && \
+    echo "source /opt/rvm/scripts/rvm" >> /home/ubuntu/.bashrc && \
+    ln -s /opt/rvm/gems/ruby*/bin/rails /usr/bin/rails && \
+    ln -s /opt/rvm/bin/rvm /usr/bin/rvm
 
 # vim for root
 RUN \
