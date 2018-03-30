@@ -21,17 +21,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 # IN THE SOFTWARE.
 
-# I'm torn between using 16.04 and ubuntu rolling
-# some of these packages are old
-# I'm going to flip these as needed for building
-# FROM ubuntu:16.04
-FROM ubuntu:rolling
-
 # MAINTAINER Dan Sheffner
-# This is a random dev docker container maintained by a crazy person.
-# Use it if you want.  Don't complain about it if you have issues
-# or it grows to be to big of an image. This is a development container.  Its going to be big.
-# make pull requests if you want changes
+
+# This Dockerfile should ALWAYS work with a ubuntu base image
+# I use prebuild images for speed and optional tools
+# https://github.com/thesheff17/docker_base
+# FROM ubuntu:16.04
+# FROM ubuntu:rolling
+FROM thesheff17/docker_base:rolling_latest
+
+# build commands
 # time docker build . -t thesheff17/docker_dev:`date +"%m%d%Y"`
 # time docker build . -t thesheff17/docker_dev:latest
 
