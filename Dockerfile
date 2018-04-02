@@ -143,7 +143,7 @@ RUN node -v
 RUN npm -v
 
 # install ionic
-RUN npm install -g ionic
+RUN npm install -g ionic cordova
 RUN ionic -v
 
 # pip stuff
