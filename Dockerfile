@@ -52,7 +52,9 @@ RUN \
     build-essential \
     curl \
     git-core \
+    gradle \
     inetutils-ping \
+    jq \
     lib32ncurses5 \
     lib32ncurses5 \
     lib32stdc++6 \
