@@ -127,7 +127,8 @@ RUN useradd -m -u $UID $USER && \
 # ripped off from the official Node Docker image's Dockerfile.
 # nvm environment variables
 ENV NVM_DIR /usr/local/nvm
-ENV NODE_VERSION 6.11.3
+# ENV NODE_VERSION 6.11.3
+ENV NODE_VERSION 8.11.1
 RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | bash \
    && . $NVM_DIR/nvm.sh \
    && nvm install $NODE_VERSION \
