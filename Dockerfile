@@ -23,72 +23,11 @@
 
 # MAINTAINER Dan Sheffner
 
-# This Dockerfile should ALWAYS work with a ubuntu base image
-# I use prebuild images for speed and optional tools
-# https://github.com/thesheff17/docker_base
-# FROM ubuntu:16.04
-# FROM ubuntu:rolling
-FROM thesheff17/docker_base:rolling_latest
+FROM thesheff17/docker_base:lts_latest-05072018
 
 # build commands
 # time docker build . -t thesheff17/docker_dev:`date +"%m%d%Y"`
 # time docker build . -t thesheff17/docker_dev:latest
-
-# build date
-RUN echo `date` > /root/build_date.txt
-
-# I use a local mirror to test
-RUN echo 'Acquire::http::Proxy "http://172.17.0.1:3142";' > /etc/apt/apt.conf.d/01proxy
-
-# 1 package per line/alphabetical order
-RUN \
-    dpkg --add-architecture i386 && \
-    apt-get update && \
-    apt-get -y upgrade && \
-    apt-get install -y \
-    apt-utils \
-    apache2 \
-    apt-utils \
-    build-essential \
-    curl \
-    git-core \
-    gradle \
-    inetutils-ping \
-    jq \
-    lib32ncurses5 \
-    lib32ncurses5 \
-    lib32stdc++6 \
-    lib32z1 \
-    lib32z1 \
-    libapache2-mod-wsgi \
-    libjpeg-dev \
-    libmemcached-dev \
-    libmysqlclient-dev \
-    libssl-dev \
-    libxml2-dev \
-    libxslt1-dev \
-    locales \
-    lsb-release \
-    mysql-client \
-    net-tools \
-    openjdk-8-jdk \
-    openssl \
-    python \
-    python-dev \
-    python-pip \
-    python3-pip \
-    screen \
-    software-properties-common \
-    sudo \
-    tmux \
-    unzip \
-    wget && \
-    apt-get autoremove && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-# cleanup proxy
-RUN rm /etc/apt/apt.conf.d/01proxy
 
 # helper ENV variables
 RUN locale-gen en_US.UTF-8
@@ -304,7 +243,7 @@ RUN \
     wtforms"
 
 # go
-ENV GO_VERSION go1.10.linux-amd64.tar.gz
+ENV GO_VERSION go1.10.2.linux-amd64.tar.gz
 RUN \
     wget --quiet https://storage.googleapis.com/golang/${GO_VERSION} && \
     tar -C /usr/local -xzf ${GO_VERSION} && \
