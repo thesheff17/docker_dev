@@ -2,6 +2,6 @@
 
 echo "build.sh started..."
 
-time docker build . -t thesheff17/docker_dev:latest-`date +"%m%d%Y"`
+time docker build --build-arg CHANGEDATE=`date +"%m%d%Y"` . -t thesheff17/docker_dev:latest-`date +"%m%d%Y"`
 
 echo "build.sh completed."
