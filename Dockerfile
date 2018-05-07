@@ -23,7 +23,10 @@
 
 # MAINTAINER Dan Sheffner
 
-FROM thesheff17/docker_base:lts_latest-05072018
+# This is passed in at runtime.
+ARG CHANGEDATE
+
+FROM thesheff17/docker_base:lts_latest-$CHANGEDATE
 
 # build commands
 # time docker build . -t thesheff17/docker_dev:`date +"%m%d%Y"`
