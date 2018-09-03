@@ -1,103 +1,96 @@
-# Copyright (c) Digital Imaging Software Solutions, INC
-# Dan Sheffner Dan@Sheffner.org
-# All rights reserved.
-#
-# Permission is hereby granted, free of charge, to any person obtaining a
-# copy of this software and associated documentation files (the
-# "Software"), to deal in the Software without restriction, including
-# without limitation the rights to use, copy, modify, merge, publish, dis-
-# tribute, sublicense, and/or sell copies of the Software, and to permit
-# persons to whom the Software is furnished to do so, subject to the fol-
-# lowing conditions:
-#
-# The above copyright notice and this permission notice shall be included
-# in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABIL-
-# ITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
-# SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-# IN THE SOFTWARE.
+FROM ubuntu:latest
 
-# MAINTAINER Dan Sheffner
-
-# This is passed in at runtime.
-ARG CHANGEDATE
-
-FROM thesheff17/docker_base:lts_latest-$CHANGEDATE
-
-# build commands
-# time docker build . -t thesheff17/docker_dev:`date +"%m%d%Y"`
-# time docker build . -t thesheff17/docker_dev:latest
+MAINTAINER Dan Sheffner <Dan@Sheffner.com>
 
 # helper ENV variables
+RUN apt-get clean && apt-get update && apt-get install -y locales
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV EDITOR vim
 ENV SHELL bash
 
-# Android install
-ENV ANDROID_STUDIO /opt/android-studio
+# build date
+RUN echo `date` > /root/build_date.txt
 
-# https://developer.android.com/studio/archive.html go here and fill out this info
-ENV ANDROID_STUDIO_VERSION 3.2.0.7
-
-# below will get it from the web.  Recommended for remote jenkins builds.  Not recommended for local testing
-# ENV ANDROID_STUDIO_URL https://dl.google.com/dl/android/studio/ide-zips/${ANDROID_STUDIO_VERSION}/android-studio-ide-173.4670218-linux.zip
-# ADD $ANDROID_STUDIO_URL /tmp/tmp.zip
-
-# setup for local comment out above
-# wget https://dl.google.com/dl/android/studio/ide-zips/3.2.0.7/android-studio-ide-173.4670218-linux.zip
-COPY ./android-studio-ide-173.4670218-linux.zip /tmp/tmp.zip
-
+# sort by name
 RUN \
-    unzip /tmp/tmp.zip -d /opt && \
-    rm /tmp/tmp.zip
+    apt-get update && \
+    apt-get upgrade -y && \
+    export DEBIAN_FRONTEND=noninteractive && \
+    apt-get install -yq \
+    automake \
+    bison \
+    build-essential \
+    curl \
+    ffmpeg \
+    gawk \
+    gcc \
+    git \
+    libbz2-dev \
+    libcurl4-openssl-dev \
+    libexpat1-dev \
+    libffi-dev \
+    libffi-dev \
+    libffi-dev \
+    libgc-dev \
+    libgdbm-dev \
+    libgmp-dev \
+    libjpeg-dev \
+    liblttng-ust0 \
+    liblzma-dev \
+    libmemcached-dev \
+    libncurses-dev \
+    libncurses5-dev \
+    libpq-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    libsqlite3-dev \
+    libssl-dev \
+    libssl-dev \
+    libssl-dev\
+    libtool \
+    libunwind8 \
+    libxml2-dev \
+    libxslt1-dev \
+    libyaml-dev \
+    libz-dev \
+    lsb-release \
+    make \
+    man \
+    mercurial \
+    mysql-client \
+    net-tools \
+    openjdk-8-jdk \
+    openssl \
+    php \
+    php-cli \
+    php-mysql \
+    pkg-config  \
+    pypy \
+    python-dev \
+    python-pip \
+    python3-dev \
+    python3-pip \
+    screen \
+    sqlite3 \
+    sudo \
+    tcl-dev \
+    tk-dev \
+    tmux \
+    vim \
+    wget \
+    zlib1g-dev && \
+    apt-get autoremove && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-ENV USER ubuntu
-ENV UID 1000
 
-RUN useradd -m -u $UID $USER && \
-    echo "$USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-
-# chmod -R a+w /opt/android-studio
-#USER $USER
-
-# node/ionic
-# Install node as a javascript runtime for asset compilation. Blatantly
-# ripped off from the official Node Docker image's Dockerfile.
-# nvm environment variables
-ENV NVM_DIR /usr/local/nvm
-# ENV NODE_VERSION 6.11.3
-ENV NODE_VERSION 8.11.1
-RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | bash \
-   && . $NVM_DIR/nvm.sh \
-   && nvm install $NODE_VERSION \
-   && nvm alias default $NODE_VERSION \
-   && nvm use default
-
-# add node and npm to path so the commands are available
-ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
-ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
-
-# confirm installation
-RUN node -v
-RUN npm -v
-
-# install ionic
-RUN npm install -g ionic cordova
-RUN ionic -v
-
-# pip stuff
 # pip upgrades
 RUN pip3 install --upgrade pip && pip2 install --upgrade pip
 
 # virtualenv
-RUN \
-    pip2 install virtualenvwrapper virtualenv && \
+RUN pip2 install virtualenvwrapper virtualenv && \
     cd /root/ && \
     /bin/bash -c "source /usr/local/bin/virtualenvwrapper.sh && \
     mkvirtualenv --python=/usr/bin/python3 venv3 && \
@@ -121,98 +114,86 @@ RUN \
     echo "# This hook is run before this virtualenv is activated." >> /root/.virtualenvs/venv2/bin/preactivate
 
 # python3 pip
-# this package will not install for some reason
-# might need to troubleshoot  unicode-slugify
 RUN \
     /bin/bash -c " source /root/.virtualenvs/venv3/bin/activate && \
-    pip3 install \
+    pip3 install \ 
     alembic \
-    awscli \
-    boto \
     boto3 \
     bpython \
     coverage \
     django \
-    django-allauth \
     django-autoslug \
-    django-axes \
     django-braces \
     django-compressor \
     django-crispy-forms \
     django-debug-toolbar \
     django-environ \
-    django-filter \
     django-floppyforms \
     django-model-utils \
-    django-nose \
+    django-nose django-axes \
     django-redis \
     django-sass-processor \
-    django-secure \
-    django-test-plus \
-    django_extensions \
-    djangorestframework \
-    factory_boy \
-    flask \
+    django-secure \ 
+    django-test-plus \ 
+    django_extensions \ 
+    factory_boy \ 
+    flask \ 
     flask-bcrypt \
-    flask-login \
-    flask-migrate \
+    flask-login \ 
+    flask-migrate \ 
     flask-script \
-    flask-sqlalchemy \
-    flask-testing \
-    flask-wtf \
-    gunicorn \
-    ipdb \
-    itsdangerous \
+    flask-sqlalchemy \ 
+    flask-testing \ 
+    flask-wtf \ 
+    gunicorn \ 
+    ipdb \ 
+    itsdangerous \ 
     jupyter \
     libsass \
     mako \
-    markdown \
-    markupsafe \
-    pillow \
-    psycopg2 \
-    py-bcrypt \
-    pyflakes \
+    markupsafe \ 
+    pillow django-allauth \ 
+    psycopg2 \ 
+    py-bcrypt \ 
+    pyflakes \ 
     pylibmc \
-    pymysql \
-    python-dateutil \
-    pytz \
-    redis \
+    pymysql \ 
+    python-dateutil \ 
+    pytz \ 
+    redis \ 
     sphinx \
-    sqlalchemy \
+    sqlalchemy \ 
+    unicode-slugify \ 
     werkzeug \
     whitenoise \
-    wtforms"
+    wtforms "
 
 # python2 pip
 RUN \
     /bin/bash -c " source /root/.virtualenvs/venv2/bin/activate && \
     pip install \
     alembic \
-    awscli \
-    boto \
     boto3 \
-    bpython \
-    coverage \
+    bpython \ 
+    coverage \ 
     django \
-    django-allauth \
-    django-autoslug \
-    django-axes \
-    django-braces \
-    django-compressor \
+    django-allauth \ 
+    django-autoslug \ 
+    django-axes \ 
+    django-braces \ 
+    django-compressor \ 
     django-crispy-forms \
     django-debug-toolbar \
-    django-environ \
-    django-filter \
-    django-floppyforms \
+    django-environ \ 
+    django-floppyforms \ 
     django-model-utils \
-    django-nose \
+    django-nose \ 
     django-redis \
-    django-sass-processor \
+    django-sass-processor \ 
     django-secure \
-    django-test-plus \
-    django_extensions \
-    djangorestframework \
-    factory_boy \
+    django-test-plus \ 
+    django_extensions \ 
+    factory_boy \ 
     flask \
     flask-bcrypt \
     flask-login \
@@ -222,103 +203,71 @@ RUN \
     flask-testing \
     flask-wtf \
     gunicorn \
-    ipdb \
+    ipdb \ 
     itsdangerous \
-    jupyter \
-    libsass \
+    jupyter \ 
+    libsass \ 
     mako \
-    markdown \
     markupsafe \
-    pillow \
+    pillow \ 
     psycopg2 \
     py-bcrypt \
-    pyflakes \
-    pylibmc \
-    pymysql \
-    python-dateutil \
+    pyflakes \ 
+    pylibmc \ 
+    pymysql \ 
+    python-dateutil \ 
     pytz \
     redis \
     sphinx \
-    sqlalchemy \
-    unicode-slugify \
-    werkzeug \
-    whitenoise \
-    wtforms"
+    sqlalchemy \ 
+    unicode-slugify \ 
+    werkzeug \ 
+    whitenoise \ 
+    wtforms "
+
+# # compile python3 from source
+# WORKDIR /root/
+# RUN wget --quiet https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz
+# RUN tar -xf Python-3.6.3.tar.xz
+# WORKDIR /root/Python-3.6.3/
+# # RUN ./configure --enable-loadable-sqlite-extensions
+# RUN ./configure --enable-optimizations --enable-loadable-sqlite-extensions
+# RUN make -j9
+# RUN make install
 
 # go
-ENV GO_VERSION go1.10.2.linux-amd64.tar.gz
-RUN \
-    wget --quiet https://storage.googleapis.com/golang/${GO_VERSION} && \
-    tar -C /usr/local -xzf ${GO_VERSION} && \
-    echo 'export PATH=$PATH:/usr/local/go/bin' >> /root/.bashrc && \
-    echo 'export GOBIN=/root/go/bin' >> /root/.bashrc && \
-    echo 'export GOPATH=/root/go/bin' >> /root/.bashrc && \
-    echo 'export PATH=$PATH:/usr/local/go/bin' >> /home/ubuntu/.bashrc && \
-    echo 'export GOBIN=/home/ubuntu/go/bin' >> /home/ubuntu/.bashrc && \
-    echo 'export GOPATH=/home/ubuntu/go/bin' >> /home/ubuntu/.bashrc && \
-    rm ${GO_VERSION}
+RUN wget --quiet https://dl.google.com/go/go1.11.linux-amd64.tar.gz
+RUN tar -C /usr/local -xzf go1.11.linux-amd64.tar.gz
+RUN echo 'export PATH=$PATH:/usr/local/go/bin' >> /root/.bashrc
+RUN echo 'export GOBIN=/root/go/bin' >> /root/.bashrc
+RUN echo 'export GOPATH=/root/go/bin' >> /root/.bashrc
+RUN rm go1.11.linux-amd64.tar.gz
 
-# ruby install
-RUN \
-    gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 && \
-    curl -sSL https://get.rvm.io | sudo bash -s stable --ruby && \
-    curl -sSL https://get.rvm.io | sudo bash -s stable --rails && \
-    echo "source /usr/local/rvm/scripts/rvm" >> /root/.bashrc && \
-    echo "source /usr/local/rvm/scripts/rvm" >> /home/ubuntu/.bashrc
+# vim modules
+RUN mkdir -p /root/.vim/autoload /root/.vim/bundle /root/.vim/colors/ /root/.vim/ftplugin/
+RUN curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+WORKDIR /root/.vim/bundle/
+RUN git clone https://github.com/tpope/vim-sensible.git && \
+    git clone https://github.com/ctrlpvim/ctrlp.vim.git  && \
+    git clone https://github.com/scrooloose/nerdtree  && \
+    git clone https://github.com/Lokaltog/vim-powerline.git  && \
+    git clone https://github.com/jistr/vim-nerdtree-tabs.git  && \
+    git clone https://github.com/python-mode/python-mode.git  && \
+    git clone https://github.com/fatih/vim-go.git  && \
+    git clone https://github.com/vim-syntastic/syntastic.git
 
-# vim for root
-RUN \
-    mkdir -p \
-    /root/.vim/autoload \
-    /root/.vim/bundle \
-    /root/.vim/colors/ \
-    /root/.vim/ftplugin/ && \
-    cd /root/.vim/bundle/ && \
-    curl -LSso /root/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim && \
-    git clone https://github.com/tpope/vim-sensible.git && \
-    git clone https://github.com/ctrlpvim/ctrlp.vim.git && \
-    git clone https://github.com/scrooloose/nerdtree && \
-    git clone https://github.com/Lokaltog/vim-powerline.git && \
-    git clone https://github.com/jistr/vim-nerdtree-tabs.git && \
-    git clone https://github.com/python-mode/python-mode.git && \
-    git clone https://github.com/fatih/vim-go.git && \
-    git clone https://github.com/vim-syntastic/syntastic.git && \
-    cd /root/.vim/colors/ && \
-    wget https://raw.githubusercontent.com/thesheff17/youtube/master/vim/wombat256mod.vim && \
-    cd /root/.vim/ftplugin/ && \
-    wget https://raw.githubusercontent.com/thesheff17/youtube/master/vim/python_editing.vim && \
-    cd /root/ && \
-    wget https://raw.githubusercontent.com/thesheff17/youtube/master/vim/vimrc2 && \
-    mv /root/vimrc2  /root/.vimrc
+# RUN git clone --recursive https://github.com/davidhalter/jedi-vim.git
 
-# vim for ubuntu
- RUN \
-    mkdir -p \
-    /home/ubuntu/.vim/autoload \
-    /home/ubuntu/.vim/bundle \
-    /home/ubuntu/.vim/colors/ \
-    /home/ubuntu/.vim/ftplugin/ && \
-    curl -LSso /home/ubuntu/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim && \
-    cd /home/ubuntu/.vim/bundle/ && \
-    git clone https://github.com/tpope/vim-sensible.git && \
-    git clone https://github.com/ctrlpvim/ctrlp.vim.git && \
-    git clone https://github.com/scrooloose/nerdtree && \
-    git clone https://github.com/Lokaltog/vim-powerline.git && \
-    git clone https://github.com/jistr/vim-nerdtree-tabs.git && \
-    git clone https://github.com/python-mode/python-mode.git && \
-    git clone https://github.com/fatih/vim-go.git && \
-    git clone https://github.com/vim-syntastic/syntastic.git && \
-    cd /home/ubuntu/.vim/colors/ && \
-    wget https://raw.githubusercontent.com/thesheff17/youtube/master/vim/wombat256mod.vim && \
-    cd /home/ubuntu/.vim/ftplugin/ && \
-    wget https://raw.githubusercontent.com/thesheff17/youtube/master/vim/python_editing.vim && \
-    cd /home/ubuntu/ && \
-    wget https://raw.githubusercontent.com/thesheff17/youtube/master/vim/vimrc2 && \
-    mv /home/ubuntu/vimrc2  /root/.vimrc
+WORKDIR /root/.vim/colors/
+RUN wget https://raw.githubusercontent.com/thesheff17/youtube/master/vim/wombat256mod.vim
+WORKDIR /root/.vim/ftplugin/
+RUN wget https://raw.githubusercontent.com/thesheff17/youtube/master/vim/python_editing.vim
+WORKDIR /root/
+RUN wget https://raw.githubusercontent.com/thesheff17/youtube/master/vim/vimrc2
+RUN mv vimrc2 .vimrc
 
 # go packages
-RUN \
-    export PATH=$PATH:/usr/local/go/bin && \
+RUN export PATH=$PATH:/usr/local/go/bin && \
     export GOPATH=/root/go/bin && \
     export GOBIN=/root/go/bin && \
     go get github.com/nsf/gocode && \
@@ -335,49 +284,57 @@ RUN \
     go get github.com/zmb3/gogetdoc && \
     go get github.com/josharian/impl
 
-# go packages
-RUN \
-    export PATH=$PATH:/usr/local/go/bin && \
-    export GOPATH=/home/ubuntu/go/bin && \
-    export GOBIN=/home/ubuntu/go/bin && \
-    go get github.com/nsf/gocode && \
-    go get github.com/alecthomas/gometalinter && \
-    go get golang.org/x/tools/cmd/goimports && \
-    go get golang.org/x/tools/cmd/guru && \
-    go get golang.org/x/tools/cmd/gorename && \
-    go get github.com/golang/lint/golint && \
-    go get github.com/rogpeppe/godef && \
-    go get github.com/kisielk/errcheck && \
-    go get github.com/jstemmer/gotags && \
-    go get github.com/klauspost/asmfmt/cmd/asmfmt && \
-    go get github.com/fatih/motion && \
-    go get github.com/zmb3/gogetdoc && \
-    go get github.com/josharian/impl
+# ruby install
+RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+RUN curl -sSL https://get.rvm.io | bash -s stable --ruby
+RUN curl -sSL https://get.rvm.io | bash -s stable --rails
+# RUN gem install bundler
 
-# going to try to fix vim
-RUN \
-    add-apt-repository ppa:jonathonf/vim && \
-    apt-get -y update && \
-    apt-get install -y vim-nox-py2 && \
-    apt-get autoremove && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-    vim --version
+#  go compile from source
+# UN mkdir /root/git/
+# ORKDIR /root/git/
+# UN git clone https://github.com/golang/go.git
+# ORKDIR /root/git/go/src/
+# UN GOROOT_BOOTSTRAP=/usr/local/go/ GOOS=linux GOARCH=amd64 ./bootstrap.bash
 
-# jenkins
-RUN \
-    wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | sudo apt-key add - && \
-    echo deb https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list && \
-    apt-get update && \
-    apt-get -y install jenkins && \
-    apt-get autoremove && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# # pypy from source
+# # This keeps erorring out.  If want to sumbit a patch please do.
+# RUN \
+#     cd /root/ && \
+#     hg clone https://bitbucket.org/pypy/pypy && cd pypy/pypy/goal && \
+#     pypy ../../rpython/bin/rpython -Ojit targetpypystandalone && \
+#     ln -s /root/pypy/pypy/goal/pypy-c /usr/bin/pypy-c
+# 
+# # pypy rpython/bin/rpython --opt=jit pypy/goal/targetpypystandalone.py
+# # cp -r /usr/include/tcl8.4/* /usr/include/ && \
+# # make share location
+# RUN mkdir -p /root/git/
+
+# tmux setup
+# ADD tmuxinator /root/.tmuxinator
+RUN echo 'set-option -g default-shell /bin/bash' > /root/.tmux.conf
+
+# # rust
+# RUN curl -sSf https://static.rust-lang.org/rustup.sh > rustup.sh && \
+#     chmod +x ./rustup.sh && \
+#     ./rustup.sh
+# 
+# # powershell
+# RUN curl -fsSL https://raw.githubusercontent.com/PowerShell/PowerShell/master/tools/download.sh > powershell_install && \
+#     chmod +x powershell_install && \
+#     ./powershell_install
 
 # Copy over samples
 COPY ./webserver.go /root/bin/
 COPY ./webserver.py /root/bin/
 COPY ./versions.sh /root/bin/
 
+# put back public mirror
+# COPY ./public.sources.list /etc/apt/sources.list
+
+# gem tmux no longer used
+# CMD ["/usr/local/bin/tmuxinator", "start", "default"]
+
+# CMD ["/bin/bash"]
 WORKDIR /root/
-CMD ["/bin/bash"]
+CMD ["/usr/bin/tmux"]
