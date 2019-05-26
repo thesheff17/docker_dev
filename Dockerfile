@@ -322,4 +322,4 @@ COPY ./webserver.py /root/bin/
 COPY ./versions.sh /root/bin/
 
 WORKDIR /root/
-lMD ["/usr/bin/tmux"]
+CMD ["/usr/bin/tmux"]
