@@ -12,4 +12,3 @@ ruby --version
 rails --version
 echo 'nodejs: ' && nodejs --version
 echo 'npm: ' && npm --version
-powershell -version
