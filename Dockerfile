@@ -25,6 +25,8 @@ FROM ubuntu:latest
 
 # MAINTAINER Dan Sheffner <Dan@Sheffner.com>
 
+# time docker build . dsheffner/docker_dev
+
 # helper ENV variables
 RUN apt-get clean && apt-get update && apt-get install -y locales
 RUN locale-gen en_US.UTF-8
@@ -139,7 +141,7 @@ RUN \
 # python3 pip
 RUN \
     /bin/bash -c " source /root/.virtualenvs/venv3/bin/activate && \
-    pip3 install \ 
+    pip3 install \
     alembic \
     boto3 \
     bpython \
@@ -156,38 +158,38 @@ RUN \
     django-nose django-axes \
     django-redis \
     django-sass-processor \
-    django-secure \ 
-    django-test-plus \ 
-    django_extensions \ 
-    factory_boy \ 
+    django-secure \
+    django-test-plus \
+    django_extensions \
+    factory_boy \
     flask \
     flask-admin \
     flask-bcrypt \
-    flask-login \ 
-    flask-migrate \ 
+    flask-login \
+    flask-migrate \
     flask-script \
-    flask-sqlalchemy \ 
-    flask-testing \ 
-    flask-wtf \ 
-    gunicorn \ 
-    ipdb \ 
-    itsdangerous \ 
+    flask-sqlalchemy \
+    flask-testing \
+    flask-wtf \
+    gunicorn \
+    ipdb \
+    itsdangerous \
     jupyter \
     libsass \
     mako \
-    markupsafe \ 
-    pillow django-allauth \ 
-    psycopg2 \ 
-    py-bcrypt \ 
-    pyflakes \ 
+    markupsafe \
+    pillow django-allauth \
+    psycopg2 \
+    py-bcrypt \
+    pyflakes \
     pylibmc \
-    pymysql \ 
-    python-dateutil \ 
-    pytz \ 
-    redis \ 
+    pymysql \
+    python-dateutil \
+    pytz \
+    redis \
     sphinx \
-    sqlalchemy \ 
-    unicode-slugify \ 
+    sqlalchemy \
+    unicode-slugify \
     werkzeug \
     whitenoise \
     wtforms \
@@ -199,26 +201,26 @@ RUN \
     pip install \
     alembic \
     boto3 \
-    bpython \ 
-    coverage \ 
+    bpython \
+    coverage \
     django \
-    django-allauth \ 
-    django-autoslug \ 
-    django-axes \ 
-    django-braces \ 
-    django-compressor \ 
+    django-allauth \
+    django-autoslug \
+    django-axes \
+    django-braces \
+    django-compressor \
     django-crispy-forms \
     django-debug-toolbar \
-    django-environ \ 
-    django-floppyforms \ 
+    django-environ \
+    django-floppyforms \
     django-model-utils \
-    django-nose \ 
+    django-nose \
     django-redis \
-    django-sass-processor \ 
+    django-sass-processor \
     django-secure \
-    django-test-plus \ 
-    django_extensions \ 
-    factory_boy \ 
+    django-test-plus \
+    django_extensions \
+    factory_boy \
     flask \
     flask-admin \
     flask-bcrypt \
@@ -229,46 +231,36 @@ RUN \
     flask-testing \
     flask-wtf \
     gunicorn \
-    ipdb \ 
+    ipdb \
     itsdangerous \
-    jupyter \ 
-    libsass \ 
+    jupyter \
+    libsass \
     mako \
     markupsafe \
-    pillow \ 
+    pillow \
     psycopg2 \
     py-bcrypt \
-    pyflakes \ 
-    pylibmc \ 
-    pymysql \ 
-    python-dateutil \ 
+    pyflakes \
+    pylibmc \
+    pymysql \
+    python-dateutil \
     pytz \
     redis \
     sphinx \
-    sqlalchemy \ 
-    unicode-slugify \ 
-    werkzeug \ 
-    whitenoise \ 
+    sqlalchemy \
+    unicode-slugify \
+    werkzeug \
+    whitenoise \
     wtforms \
     zappa "
 
-# # compile python3 from source
-# WORKDIR /root/
-# RUN wget --quiet https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz
-# RUN tar -xf Python-3.6.3.tar.xz
-# WORKDIR /root/Python-3.6.3/
-# # RUN ./configure --enable-loadable-sqlite-extensions
-# RUN ./configure --enable-optimizations --enable-loadable-sqlite-extensions
-# RUN make -j9
-# RUN make install
-
 # go
-RUN wget --quiet https://dl.google.com/go/go1.11.linux-amd64.tar.gz
-RUN tar -C /usr/local -xzf go1.11.linux-amd64.tar.gz
+RUN wget --quiet https://dl.google.com/go/go1.12.5.linux-amd64.tar.gz
+RUN tar -C /usr/local -xzf go1.12.5.linux-amd64.tar.gz
 RUN echo 'export PATH=$PATH:/usr/local/go/bin' >> /root/.bashrc
 RUN echo 'export GOBIN=/root/go/bin' >> /root/.bashrc
 RUN echo 'export GOPATH=/root/go/bin' >> /root/.bashrc
-RUN rm go1.11.linux-amd64.tar.gz
+RUN rm go1.12.5.linux-amd64.tar.gz
 
 # vim modules
 RUN mkdir -p /root/.vim/autoload /root/.vim/bundle /root/.vim/colors/ /root/.vim/ftplugin/
@@ -302,7 +294,7 @@ RUN export PATH=$PATH:/usr/local/go/bin && \
     go get golang.org/x/tools/cmd/goimports && \
     go get golang.org/x/tools/cmd/guru && \
     go get golang.org/x/tools/cmd/gorename && \
-    go get github.com/golang/lint/golint && \
+    go get golang.org/x/lint/golint && \
     go get github.com/rogpeppe/godef && \
     go get github.com/kisielk/errcheck && \
     go get github.com/jstemmer/gotags && \
@@ -312,56 +304,22 @@ RUN export PATH=$PATH:/usr/local/go/bin && \
     go get github.com/josharian/impl
 
 # ruby install
-RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+RUN gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 RUN curl -sSL https://get.rvm.io | bash -s stable --ruby
 RUN curl -sSL https://get.rvm.io | bash -s stable --rails
 # RUN gem install bundler
-
-#  go compile from source
-# UN mkdir /root/git/
-# ORKDIR /root/git/
-# UN git clone https://github.com/golang/go.git
-# ORKDIR /root/git/go/src/
-# UN GOROOT_BOOTSTRAP=/usr/local/go/ GOOS=linux GOARCH=amd64 ./bootstrap.bash
-
-# # pypy from source
-# # This keeps erorring out.  If want to sumbit a patch please do.
-# RUN \
-#     cd /root/ && \
-#     hg clone https://bitbucket.org/pypy/pypy && cd pypy/pypy/goal && \
-#     pypy ../../rpython/bin/rpython -Ojit targetpypystandalone && \
-#     ln -s /root/pypy/pypy/goal/pypy-c /usr/bin/pypy-c
-# 
-# # pypy rpython/bin/rpython --opt=jit pypy/goal/targetpypystandalone.py
-# # cp -r /usr/include/tcl8.4/* /usr/include/ && \
-# # make share location
-# RUN mkdir -p /root/git/
 
 # tmux setup
 # ADD tmuxinator /root/.tmuxinator
 RUN echo 'set-option -g default-shell /bin/bash' > /root/.tmux.conf
 
-# # rust
-# RUN curl -sSf https://static.rust-lang.org/rustup.sh > rustup.sh && \
-#     chmod +x ./rustup.sh && \
-#     ./rustup.sh
-# 
-# # powershell
-# RUN curl -fsSL https://raw.githubusercontent.com/PowerShell/PowerShell/master/tools/download.sh > powershell_install && \
-#     chmod +x powershell_install && \
-#     ./powershell_install
+# rust
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 
 # Copy over samples
 COPY ./webserver.go /root/bin/
 COPY ./webserver.py /root/bin/
 COPY ./versions.sh /root/bin/
 
-# put back public mirror
-# COPY ./public.sources.list /etc/apt/sources.list
-
-# gem tmux no longer used
-# CMD ["/usr/local/bin/tmuxinator", "start", "default"]
-
-# CMD ["/bin/bash"]
 WORKDIR /root/
-CMD ["/usr/bin/tmux"]
+lMD ["/usr/bin/tmux"]
